@@ -11,8 +11,7 @@
   --grid-gap: clamp(0.5rem, 1.25vw, 1.25rem);
   --section-spacing: clamp(3rem, 7vw, 7rem);
   --header-height: 4.5rem;
-  --project-image-spacing: clamp(1rem, 2.5vw, 2.5rem);
-  --project-carousel-width: 50%;
+  --project-card-padding: clamp(0.75rem, 1.4vw, 1.5rem);
   --border-thickness: 1px;
   --border-color: #d8d8d8;
   --focus-outline: 2px solid #0a0a0a;
@@ -171,10 +170,12 @@ button {
 
 .project-card {
   position: relative;
-  display: block;
+  display: grid;
   aspect-ratio: 1;
+  place-items: center;
+  padding: var(--project-card-padding);
   overflow: hidden;
-  background: var(--image-background);
+  background: var(--page-background);
 }
 
 .project-card:hover {
@@ -184,7 +185,7 @@ button {
 .project-card__image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform var(--transition-speed) ease;
 }
 
@@ -275,12 +276,16 @@ button {
   font-size: clamp(1.25rem, 2.5vw, 2rem);
 }
 
-.project-page__header {
-  margin: clamp(1rem, 4vw, 4rem) 0 var(--section-spacing);
+.project-page {
+  margin-top: clamp(1rem, 4vw, 4rem);
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(16rem, 0.5fr);
-  gap: clamp(2rem, 6vw, 7rem);
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 1fr);
+  gap: clamp(2rem, 5vw, 6rem);
   align-items: start;
+}
+
+.project-page__header {
+  min-width: 0;
 }
 
 .project-page__description {
@@ -290,22 +295,17 @@ button {
 }
 
 .project-page__meta {
-  margin-bottom: 0;
+  margin: clamp(2rem, 4vw, 4rem) 0 0;
+  display: grid;
+  gap: 1.25rem;
 }
 
 .project-page__meta div {
-  padding: 0.65rem 0;
-  display: grid;
-  grid-template-columns: 7rem 1fr;
-  gap: 1rem;
-  border-top: var(--border-thickness) solid var(--border-color);
-}
-
-.project-page__meta div:last-child {
-  border-bottom: var(--border-thickness) solid var(--border-color);
+  display: block;
 }
 
 .project-page__meta dt {
+  margin-bottom: 0.2rem;
   color: var(--muted-color);
 }
 
@@ -315,9 +315,9 @@ button {
 
 .gallery,
 .gallery-empty {
-  width: var(--project-carousel-width);
+  width: 100%;
   max-width: 100%;
-  margin-top: var(--project-image-spacing);
+  margin: 0;
 }
 
 .gallery__viewer,
@@ -487,7 +487,6 @@ button {
     --grid-gap: 0.5rem;
     --header-height: 4rem;
     --section-spacing: 3.5rem;
-    --project-carousel-width: 100%;
   }
 
   .site-header__inner {
@@ -519,7 +518,7 @@ button {
   }
 
   .about-page,
-  .project-page__header {
+  .project-page {
     grid-template-columns: 1fr;
     gap: 2rem;
   }

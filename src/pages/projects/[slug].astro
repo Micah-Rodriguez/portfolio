@@ -23,6 +23,8 @@ const { project } = Astro.props;
   description={project.data.description || `${project.data.title} project.`}
 >
   <article class="project-page">
+    <ProjectGallery images={project.images} projectTitle={project.data.title} />
+
     <header class="project-page__header">
       <div>
         <h1>{project.data.title}</h1>
@@ -34,7 +36,5 @@ const { project } = Astro.props;
         <div><dt>Company</dt><dd>{project.data.company}</dd></div>
       </dl>
     </header>
-
-    <ProjectGallery images={project.images} projectTitle={project.data.title} />
   </article>
 </BaseLayout>
