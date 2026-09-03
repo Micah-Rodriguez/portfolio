@@ -4,7 +4,10 @@
   --muted-color: #5f5f5f;
   --image-background: #f2f2f2;
   --lightbox-background: #111;
-  --font-family: Arial, Helvetica, sans-serif;
+  --font-family: "forma-djr-deck", sans-serif;
+  --font-weight-body: 100;
+  --font-weight-interface: 500;
+  --font-weight-heading: 900;
   --base-font-size: 1rem;
   --page-padding: clamp(1rem, 2.5vw, 2.5rem);
   --content-width: 112rem;
@@ -28,6 +31,7 @@ html {
   background: var(--page-background);
   color: var(--text-color);
   font-family: var(--font-family);
+  font-weight: var(--font-weight-body);
   font-size: var(--base-font-size);
   line-height: 1.45;
 }
@@ -61,8 +65,22 @@ figure {
 
 h1,
 h2 {
-  font-weight: 600;
+  font-weight: var(--font-weight-heading);
   letter-spacing: -0.025em;
+}
+
+.site-name,
+.site-header nav,
+.site-footer,
+.project-card__placeholder,
+.project-card__meta,
+.project-card__meta strong,
+.project-page__meta,
+.gallery-empty,
+.gallery__arrow,
+.lightbox__arrow,
+.lightbox__close {
+  font-weight: var(--font-weight-interface);
 }
 
 h1 {
@@ -129,7 +147,6 @@ button {
 }
 
 .site-name {
-  font-weight: 600;
   white-space: nowrap;
 }
 
