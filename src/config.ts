@@ -1,9 +1,9 @@
 export const siteConfig = {
-  name: 'Your Name',
-  title: "Your Name's Portfolio",
-  email: 'email@example.com',
+  name: 'Micah Rodriguez',
+  title: "Micah Rodriguez's Portfolio",
+  email: 'micahrodriguezbiz@gmail.com',
   linkedinLabel: 'LinkedIn',
-  linkedinUrl: 'https://www.linkedin.com/in/your-name',
+  linkedinUrl: 'https://www.linkedin.com/in/micah-rodriguez-business',
 };
 
 export function withBase(path = '/') {

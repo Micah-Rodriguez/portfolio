@@ -1,10 +1,10 @@
 ---
-title: "Heading"
+title: "Fightstick"
 year: 2026
 disciplines:
   - "Graphic Design"
-  - "Branding"
-company: "Heading"
+  - "Product Design"
+company: "Freelance"
 hidden: false
 description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 imageAlts: {}
