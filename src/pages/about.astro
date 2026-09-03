@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config';
+
+const portraitFiles = import.meta.glob<ImageMetadata>(
+  '/src/assets/portrait.{jpg,jpeg,png,webp,avif}',
+  { eager: true, import: 'default' },
+);
+const portrait = Object.values(portraitFiles)[0];
+---
+
+<BaseLayout title={`About — ${siteConfig.title}`}>
+  <article class="about-page simple-page">
+    <div class="about-page__portrait">
+      {portrait ? (
+        <Image src={portrait} alt={`Portrait of ${siteConfig.name}`} width={900} height={900} fit="cover" />
+      ) : (
+        <span>Add src/assets/portrait.jpg</span>
+      )}
+    </div>
+    <div class="about-page__content">
+      <h1>About</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+      <section aria-labelledby="awards-heading">
+        <h2 id="awards-heading">Awards</h2>
+        <ul class="plain-list">
+          <li>2026 — Award Name — Organization</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="about-contact-heading">
+        <h2 id="about-contact-heading">Contact</h2>
+        <p><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a><br /><a href={siteConfig.linkedinUrl}>{siteConfig.linkedinLabel}</a></p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

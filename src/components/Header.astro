@@ -1,0 +1,21 @@
+---
+import { siteConfig, withBase } from '../config';
+
+const projectsPath = withBase('/');
+const aboutPath = withBase('/about/');
+const contactPath = withBase('/contact/');
+const currentPath = Astro.url.pathname;
+const projectsActive =
+  currentPath === projectsPath || currentPath.startsWith(withBase('/projects/'));
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <span class="site-name">{siteConfig.name}</span>
+    <nav aria-label="Primary navigation">
+      <a href={projectsPath} aria-current={projectsActive ? 'page' : undefined}>Projects</a>
+      <a href={aboutPath} aria-current={currentPath === aboutPath ? 'page' : undefined}>About</a>
+      <a href={contactPath} aria-current={currentPath === contactPath ? 'page' : undefined}>Contact</a>
+    </nav>
+  </div>
+</header>

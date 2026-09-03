@@ -1,0 +1,9 @@
+---
+import { siteConfig } from '../config';
+---
+
+<footer class="site-footer">
+  <a href={`mailto:${siteConfig.email}`}>Email</a>
+  <span aria-hidden="true">·</span>
+  <a href={siteConfig.linkedinUrl} rel="me">{siteConfig.linkedinLabel}</a>
+</footer>

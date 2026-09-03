@@ -1,0 +1,120 @@
+---
+import { Image } from 'astro:assets';
+import type { ProjectImage } from '../lib/projects';
+
+interface Props {
+  images: ProjectImage[];
+  projectTitle: string;
+}
+
+const { images, projectTitle } = Astro.props;
+---
+
+{images.length > 0 ? (
+  <section class="gallery" data-project-gallery aria-label={`${projectTitle} image gallery`}>
+    <div class="gallery__viewer">
+      {images.map((image, index) => (
+        <figure class="gallery__slide" data-gallery-slide hidden={index !== 0}>
+          <button
+            class="gallery__open"
+            type="button"
+            data-open-lightbox
+            aria-label={`Open image ${index + 1} of ${images.length} full screen`}
+          >
+            <Image
+              class="gallery__image"
+              src={image.src}
+              alt={image.alt}
+              width={Math.min(image.src.width, 2000)}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </button>
+        </figure>
+      ))}
+
+      <button class="gallery__arrow gallery__arrow--previous" type="button" data-previous aria-label="Previous image" disabled={images.length < 2}>←</button>
+      <button class="gallery__arrow gallery__arrow--next" type="button" data-next aria-label="Next image" disabled={images.length < 2}>→</button>
+      <p class="visually-hidden" aria-live="polite" data-gallery-status>Image 1 of {images.length}</p>
+    </div>
+
+    <dialog class="lightbox" data-lightbox aria-label={`${projectTitle} image viewer`}>
+      <button class="lightbox__close" type="button" data-close-lightbox aria-label="Close image viewer">Close</button>
+      <div class="lightbox__viewer">
+        {images.map((image, index) => (
+          <figure class="lightbox__slide" data-lightbox-slide hidden={index !== 0}>
+            <Image
+              class="lightbox__image"
+              src={image.src}
+              alt={image.alt}
+              width={Math.min(image.src.width, 2400)}
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        ))}
+      </div>
+      <button class="lightbox__arrow lightbox__arrow--previous" type="button" data-lightbox-previous aria-label="Previous image" disabled={images.length < 2}>←</button>
+      <button class="lightbox__arrow lightbox__arrow--next" type="button" data-lightbox-next aria-label="Next image" disabled={images.length < 2}>→</button>
+      <p class="visually-hidden" aria-live="polite" data-lightbox-status>Image 1 of {images.length}</p>
+    </dialog>
+  </section>
+) : (
+  <section class="gallery-empty" aria-label="Project images">
+    <p>Add numbered project images here: 01.jpg, 02.png, 03.webp</p>
+  </section>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-project-gallery]').forEach((gallery) => {
+    const slides = Array.from(gallery.querySelectorAll<HTMLElement>('[data-gallery-slide]'));
+    const lightboxSlides = Array.from(gallery.querySelectorAll<HTMLElement>('[data-lightbox-slide]'));
+    const dialog = gallery.querySelector<HTMLDialogElement>('[data-lightbox]');
+    const galleryStatus = gallery.querySelector<HTMLElement>('[data-gallery-status]');
+    const lightboxStatus = gallery.querySelector<HTMLElement>('[data-lightbox-status]');
+    let currentIndex = 0;
+
+    const show = (index: number) => {
+      currentIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        slide.hidden = slideIndex !== currentIndex;
+      });
+      lightboxSlides.forEach((slide, slideIndex) => {
+        slide.hidden = slideIndex !== currentIndex;
+      });
+      const status = `Image ${currentIndex + 1} of ${slides.length}`;
+      if (galleryStatus) galleryStatus.textContent = status;
+      if (lightboxStatus) lightboxStatus.textContent = status;
+    };
+
+    const move = (amount: number) => show(currentIndex + amount);
+
+    gallery.querySelector('[data-previous]')?.addEventListener('click', () => move(-1));
+    gallery.querySelector('[data-next]')?.addEventListener('click', () => move(1));
+    gallery.querySelector('[data-lightbox-previous]')?.addEventListener('click', () => move(-1));
+    gallery.querySelector('[data-lightbox-next]')?.addEventListener('click', () => move(1));
+
+    gallery.querySelectorAll('[data-open-lightbox]').forEach((button, index) => {
+      button.addEventListener('click', () => {
+        show(index);
+        dialog?.showModal();
+      });
+    });
+
+    gallery.querySelector('[data-close-lightbox]')?.addEventListener('click', () => dialog?.close());
+    dialog?.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    gallery.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        move(-1);
+      }
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        move(1);
+      }
+    });
+  });
+</script>

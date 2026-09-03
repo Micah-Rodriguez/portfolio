@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+import type { Project } from '../lib/projects';
+import { withBase } from '../config';
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const cover = project.images[0];
+---
+
+<a
+  class:list={['project-card', { 'project-card--empty': !cover }]}
+  href={withBase(`/projects/${project.slug}/`)}
+  aria-label={`View ${project.data.title}`}
+>
+  {cover ? (
+    <Image
+      class="project-card__image"
+      src={cover.src}
+      alt={cover.alt}
+      width={Math.min(cover.src.width, 1000)}
+      loading={index < 4 ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  ) : (
+    <span class="project-card__placeholder">Add 01.jpg to this project folder</span>
+  )}
+  <span class="project-card__meta">
+    <strong>{project.data.title}</strong>
+    <span>{project.data.disciplines.join(', ')}</span>
+  </span>
+</a>

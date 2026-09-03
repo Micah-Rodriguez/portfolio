@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config';
+---
+
+<BaseLayout title={`Contact — ${siteConfig.title}`}>
+  <article class="contact-page simple-page">
+    <h1>Contact</h1>
+    <p><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></p>
+    <p><a href={siteConfig.linkedinUrl}>{siteConfig.linkedinLabel}</a></p>
+  </article>
+</BaseLayout>

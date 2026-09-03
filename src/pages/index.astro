@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getVisibleProjects } from '../lib/projects';
+
+const projects = getVisibleProjects();
+---
+
+<BaseLayout>
+  {projects.length > 0 ? (
+    <section class="project-grid" aria-label="Projects">
+      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+    </section>
+  ) : (
+    <p class="empty-message">Add a project folder to show work here.</p>
+  )}
+</BaseLayout>

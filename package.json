@@ -1,0 +1,20 @@
+{
+  "name": "personal-design-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "7.2.10",
+    "@astrojs/check": "0.9.6",
+    "typescript": "5.9.3"
+  }
+}
