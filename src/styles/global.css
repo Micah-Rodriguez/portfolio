@@ -12,6 +12,7 @@
   --section-spacing: clamp(3rem, 7vw, 7rem);
   --header-height: 4.5rem;
   --project-image-spacing: clamp(1rem, 2.5vw, 2.5rem);
+  --project-carousel-width: 50%;
   --border-thickness: 1px;
   --border-color: #d8d8d8;
   --focus-outline: 2px solid #0a0a0a;
@@ -314,6 +315,8 @@ button {
 
 .gallery,
 .gallery-empty {
+  width: var(--project-carousel-width);
+  max-width: 100%;
   margin-top: var(--project-image-spacing);
 }
 
@@ -484,6 +487,7 @@ button {
     --grid-gap: 0.5rem;
     --header-height: 4rem;
     --section-spacing: 3.5rem;
+    --project-carousel-width: 100%;
   }
 
   .site-header__inner {
