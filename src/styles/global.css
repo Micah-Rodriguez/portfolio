@@ -14,12 +14,13 @@
   --grid-gap: clamp(0.5rem, 1.25vw, 1.25rem);
   --section-spacing: clamp(3rem, 7vw, 7rem);
   --project-group-spacing: clamp(2.5rem, 5vw, 5rem);
-  --project-group-heading-spacing: clamp(0.75rem, 1.5vw, 1.25rem);
+  --project-group-heading-spacing: clamp(0.4rem, 0.75vw, 0.75rem);
   --header-height: 4.5rem;
   --border-thickness: 1px;
   --border-color: #d8d8d8;
   --focus-outline: 2px solid #0a0a0a;
   --transition-speed: 180ms;
+  --project-card-hover-shadow: 0 0.35rem 1rem rgb(10 10 10 / 0.12);
 }
 
 *,
@@ -180,12 +181,21 @@ button {
   border-top: var(--border-thickness) solid var(--border-color);
 }
 
+.project-groups {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
 .project-grouping {
+  grid-area: 1 / 2;
+  z-index: 1;
+  align-self: start;
+  justify-self: end;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.35rem;
-  margin-bottom: var(--project-group-spacing);
+  margin-bottom: 0;
   font-weight: var(--font-weight-interface);
 }
 
@@ -207,12 +217,18 @@ button {
 }
 
 .project-group-list {
+  grid-area: 1 / 1 / 2 / -1;
+  min-width: 0;
   display: grid;
   gap: var(--project-group-spacing);
 }
 
 .project-group__heading {
   margin-bottom: var(--project-group-heading-spacing);
+}
+
+.project-group:first-child .project-group__heading {
+  padding-inline-end: 11rem;
 }
 
 .project-grid {
@@ -229,6 +245,7 @@ button {
   padding: var(--project-card-padding);
   overflow: hidden;
   background: var(--page-background);
+  transition: box-shadow var(--transition-speed) ease;
 }
 
 .project-card:hover {
@@ -512,6 +529,10 @@ button {
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .project-card:hover {
+    box-shadow: var(--project-card-hover-shadow);
+  }
+
   .project-card:not(.project-card--empty) .project-card__meta {
     opacity: 0;
   }
@@ -528,6 +549,7 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .project-card,
   .project-card__image,
   .project-card__meta {
     transition: none;
