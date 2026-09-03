@@ -16,7 +16,6 @@
   --project-group-spacing: clamp(2.5rem, 5vw, 5rem);
   --project-group-heading-spacing: clamp(0.75rem, 1.5vw, 1.25rem);
   --header-height: 4.5rem;
-  --project-card-padding: clamp(0.75rem, 1.4vw, 1.5rem);
   --border-thickness: 1px;
   --border-color: #d8d8d8;
   --focus-outline: 2px solid #0a0a0a;
