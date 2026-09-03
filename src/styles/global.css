@@ -5,9 +5,9 @@
   --image-background: #f2f2f2;
   --lightbox-background: #111;
   --font-family: "forma-djr-deck", sans-serif;
-  --font-weight-body: 100;
+  --font-weight-body: 400;
   --font-weight-interface: 500;
-  --font-weight-heading: 900;
+  --font-weight-heading: 700;
   --base-font-size: 1rem;
   --page-padding: clamp(1rem, 2.5vw, 2.5rem);
   --content-width: 112rem;
