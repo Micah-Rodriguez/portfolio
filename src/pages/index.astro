@@ -4,14 +4,115 @@ import ProjectCard from '../components/ProjectCard.astro';
 import { getVisibleProjects } from '../lib/projects';
 
 const projects = getVisibleProjects();
+const projectIndexes = new Map(projects.map((project, index) => [project.slug, index]));
+
+const disciplineGroups = new Map<string, typeof projects>();
+for (const project of projects) {
+  const primaryDiscipline = project.data.disciplines[0];
+  const group = disciplineGroups.get(primaryDiscipline) ?? [];
+  group.push(project);
+  disciplineGroups.set(primaryDiscipline, group);
+}
+
+const sortedDisciplineGroups = [...disciplineGroups.entries()].sort(([a], [b]) =>
+  a.localeCompare(b),
+);
 ---
 
 <BaseLayout>
   {projects.length > 0 ? (
-    <section class="project-grid" aria-label="Projects">
-      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+    <section class="project-groups" aria-label="Projects">
+      <div class="project-grouping">
+        <label for="project-grouping">Sort:</label>
+        <select
+          class="project-grouping__select"
+          id="project-grouping"
+          data-project-grouping
+        >
+          <option value="discipline" selected>By Discipline</option>
+          <option value="year">By Year</option>
+        </select>
+      </div>
+
+      <div class="project-group-list" data-project-group-list>
+        {sortedDisciplineGroups.map(([discipline, groupedProjects], groupIndex) => {
+          const headingId = `project-group-discipline-${groupIndex}`;
+
+          return (
+            <section class="project-group" aria-labelledby={headingId}>
+              <h2 class="project-group__heading" id={headingId}>{discipline}</h2>
+              <div class="project-grid">
+                {groupedProjects.map((project) => (
+                  <ProjectCard
+                    project={project}
+                    index={projectIndexes.get(project.slug) ?? 0}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </section>
   ) : (
     <p class="empty-message">Add a project folder to show work here.</p>
   )}
 </BaseLayout>
+
+<script>
+  type GroupingMode = 'discipline' | 'year';
+
+  const groupingSelect = document.querySelector<HTMLSelectElement>('[data-project-grouping]');
+  const groupList = document.querySelector<HTMLElement>('[data-project-group-list]');
+
+  if (groupingSelect && groupList) {
+    const projectCards = Array.from(groupList.querySelectorAll<HTMLElement>('.project-card'))
+      .sort(
+        (a, b) =>
+          Number(a.dataset.projectOrder ?? 0) - Number(b.dataset.projectOrder ?? 0),
+      );
+
+    const renderGroups = (mode: GroupingMode) => {
+      const groups = new Map<string, HTMLElement[]>();
+
+      for (const card of projectCards) {
+        const groupName =
+          mode === 'year' ? card.dataset.year : card.dataset.primaryDiscipline;
+
+        if (!groupName) continue;
+
+        const group = groups.get(groupName) ?? [];
+        group.push(card);
+        groups.set(groupName, group);
+      }
+
+      const groupNames = [...groups.keys()].sort((a, b) =>
+        mode === 'year' ? Number(b) - Number(a) : a.localeCompare(b),
+      );
+      const fragment = document.createDocumentFragment();
+
+      groupNames.forEach((groupName, groupIndex) => {
+        const headingId = `project-group-${mode}-${groupIndex}`;
+        const section = document.createElement('section');
+        const heading = document.createElement('h2');
+        const grid = document.createElement('div');
+
+        section.className = 'project-group';
+        section.setAttribute('aria-labelledby', headingId);
+        heading.className = 'project-group__heading';
+        heading.id = headingId;
+        heading.textContent = groupName;
+        grid.className = 'project-grid';
+        grid.append(...(groups.get(groupName) ?? []));
+        section.append(heading, grid);
+        fragment.append(section);
+      });
+
+      groupList.replaceChildren(fragment);
+    };
+
+    groupingSelect.addEventListener('change', () => {
+      renderGroups(groupingSelect.value === 'year' ? 'year' : 'discipline');
+    });
+  }
+</script>

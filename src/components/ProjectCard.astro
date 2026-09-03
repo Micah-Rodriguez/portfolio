@@ -16,6 +16,9 @@ const cover = project.images[0];
   class:list={['project-card', { 'project-card--empty': !cover }]}
   href={withBase(`/projects/${project.slug}/`)}
   aria-label={`View ${project.data.title}`}
+  data-primary-discipline={project.data.disciplines[0]}
+  data-year={project.data.year}
+  data-project-order={index}
 >
   {cover ? (
     <Image

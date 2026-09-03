@@ -13,6 +13,8 @@
   --content-width: 112rem;
   --grid-gap: clamp(0.5rem, 1.25vw, 1.25rem);
   --section-spacing: clamp(3rem, 7vw, 7rem);
+  --project-group-spacing: clamp(2.5rem, 5vw, 5rem);
+  --project-group-heading-spacing: clamp(0.75rem, 1.5vw, 1.25rem);
   --header-height: 4.5rem;
   --project-card-padding: clamp(0.75rem, 1.4vw, 1.5rem);
   --border-thickness: 1px;
@@ -177,6 +179,41 @@ button {
   align-items: center;
   gap: 0.5rem;
   border-top: var(--border-thickness) solid var(--border-color);
+}
+
+.project-grouping {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+  margin-bottom: var(--project-group-spacing);
+  font-weight: var(--font-weight-interface);
+}
+
+.project-grouping__select {
+  max-width: 100%;
+  padding: 0 1.25rem 0 0;
+  border: 0;
+  border-bottom: var(--border-thickness) solid var(--text-color);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.project-grouping__select:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 3px;
+}
+
+.project-group-list {
+  display: grid;
+  gap: var(--project-group-spacing);
+}
+
+.project-group__heading {
+  margin-bottom: var(--project-group-heading-spacing);
 }
 
 .project-grid {
