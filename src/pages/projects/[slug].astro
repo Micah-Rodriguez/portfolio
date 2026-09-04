@@ -1,27 +1,61 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectGallery from '../../components/ProjectGallery.astro';
-import { siteConfig } from '../../config';
+import { siteConfig, withBase } from '../../config';
 import { getVisibleProjects, type Project } from '../../lib/projects';
 
 export function getStaticPaths() {
-  return getVisibleProjects().map((project) => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
+  const projects = getVisibleProjects();
+
+  return projects.map((project, index) => {
+    const previousProject =
+      projects.length > 1 ? projects[(index - 1 + projects.length) % projects.length] : undefined;
+    const nextProject =
+      projects.length > 1 ? projects[(index + 1) % projects.length] : undefined;
+
+    return {
+      params: { slug: project.slug },
+      props: { project, previousProject, nextProject },
+    };
+  });
 }
 
 interface Props {
   project: Project;
+  previousProject?: Project;
+  nextProject?: Project;
 }
 
-const { project } = Astro.props;
+const { project, previousProject, nextProject } = Astro.props;
 ---
 
 <BaseLayout
   title={`${project.data.title} — ${siteConfig.title}`}
   description={project.data.description || `${project.data.title} project.`}
 >
+  <a class="project-back" href={withBase('/?restore=projects')}>Back to Projects</a>
+
+  {previousProject && nextProject && (
+    <nav class="project-sequence" aria-label="Browse projects">
+      <a
+        class="project-sequence__link project-sequence__link--previous"
+        href={withBase(`/projects/${previousProject.slug}/`)}
+        aria-label={`Previous project: ${previousProject.data.title}`}
+        title={previousProject.data.title}
+      >
+        <span aria-hidden="true">←</span>
+      </a>
+      <a
+        class="project-sequence__link project-sequence__link--next"
+        href={withBase(`/projects/${nextProject.slug}/`)}
+        aria-label={`Next project: ${nextProject.data.title}`}
+        title={nextProject.data.title}
+      >
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  )}
+
   <article class="project-page">
     <ProjectGallery images={project.images} projectTitle={project.data.title} />
 

@@ -62,6 +62,13 @@ const sortedDisciplineGroups = [...disciplineGroups.entries()].sort(([a], [b]) =
 <script>
   type GroupingMode = 'discipline' | 'year';
 
+  interface ProjectListState {
+    grouping: GroupingMode;
+    scrollY: number;
+  }
+
+  const projectListStateKey = 'portfolio-project-list-state';
+
   const groupingSelect = document.querySelector<HTMLSelectElement>('[data-project-grouping]');
   const groupList = document.querySelector<HTMLElement>('[data-project-group-list]');
 
@@ -114,5 +121,48 @@ const sortedDisciplineGroups = [...disciplineGroups.entries()].sort(([a], [b]) =
     groupingSelect.addEventListener('change', () => {
       renderGroups(groupingSelect.value === 'year' ? 'year' : 'discipline');
     });
+
+    const saveProjectListState = () => {
+      const state: ProjectListState = {
+        grouping: groupingSelect.value === 'year' ? 'year' : 'discipline',
+        scrollY: window.scrollY,
+      };
+
+      try {
+        sessionStorage.setItem(projectListStateKey, JSON.stringify(state));
+      } catch {
+        // The project links still work when browser storage is unavailable.
+      }
+    };
+
+    projectCards.forEach((card) => card.addEventListener('click', saveProjectListState));
+
+    const pageUrl = new URL(window.location.href);
+    if (pageUrl.searchParams.get('restore') === 'projects') {
+      try {
+        const savedState = sessionStorage.getItem(projectListStateKey);
+
+        if (savedState) {
+          const state = JSON.parse(savedState) as Partial<ProjectListState>;
+          const grouping = state.grouping === 'year' ? 'year' : 'discipline';
+
+          groupingSelect.value = grouping;
+          renderGroups(grouping);
+
+          if (typeof state.scrollY === 'number' && Number.isFinite(state.scrollY)) {
+            requestAnimationFrame(() => window.scrollTo(0, Math.max(0, state.scrollY ?? 0)));
+          }
+        }
+      } catch {
+        // Invalid or unavailable storage falls back to the normal homepage state.
+      }
+
+      pageUrl.searchParams.delete('restore');
+      history.replaceState(
+        history.state,
+        '',
+        `${pageUrl.pathname}${pageUrl.search}${pageUrl.hash}`,
+      );
+    }
   }
 </script>

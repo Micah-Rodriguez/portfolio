@@ -11,7 +11,7 @@ const projectsActive =
 
 <header class="site-header">
   <div class="site-header__inner">
-    <span class="site-name">{siteConfig.name}</span>
+    <a class="site-name" href={projectsPath}>{siteConfig.name}</a>
     <nav aria-label="Primary navigation">
       <a href={projectsPath} aria-current={projectsActive ? 'page' : undefined}>Projects</a>
       <a href={aboutPath} aria-current={currentPath === aboutPath ? 'page' : undefined}>About</a>

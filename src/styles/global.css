@@ -74,6 +74,8 @@ h2 {
 .site-name,
 .site-header nav,
 .site-footer,
+.project-back,
+.project-sequence__link,
 .project-card__placeholder,
 .project-card__meta,
 .project-card__meta strong,
@@ -354,6 +356,39 @@ button {
   align-items: start;
 }
 
+.project-back {
+  display: inline-block;
+}
+
+.project-sequence__link {
+  position: fixed;
+  z-index: 10;
+  top: 50%;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.project-sequence__link:hover {
+  text-decoration: none;
+}
+
+.project-sequence__link--previous {
+  left: max(0.25rem, env(safe-area-inset-left));
+}
+
+.project-sequence__link--next {
+  right: max(0.25rem, env(safe-area-inset-right));
+}
+
+body:has(.lightbox[open]) .project-sequence {
+  display: none;
+}
+
 .project-page__header {
   min-width: 0;
 }
@@ -596,6 +631,12 @@ button {
   .project-page {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .project-sequence__link {
+    top: auto;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    transform: none;
   }
 
   .about-page__portrait {
