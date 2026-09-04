@@ -5,6 +5,7 @@ export interface ProjectData {
   year: number;
   disciplines: string[];
   company: string;
+  tools?: string[];
   hidden: boolean;
   description: string;
   imageAlts: Record<string, string>;
@@ -63,6 +64,14 @@ function loadProjects(): Project[] {
     const disciplines = frontmatter.disciplines.map((discipline) =>
       requiredString(discipline, 'disciplines', filePath),
     );
+    let tools: string[] | undefined;
+    if (frontmatter.tools !== undefined) {
+      if (!Array.isArray(frontmatter.tools)) {
+        throw new Error(`${filePath}: frontmatter field "tools" must be a list.`);
+      }
+
+      tools = frontmatter.tools.map((tool) => requiredString(tool, 'tools', filePath));
+    }
     const imageAlts =
       typeof frontmatter.imageAlts === 'object' && frontmatter.imageAlts !== null
         ? (frontmatter.imageAlts as Record<string, string>)
@@ -92,6 +101,7 @@ function loadProjects(): Project[] {
         year,
         disciplines,
         company,
+        tools,
         hidden: frontmatter.hidden === true,
         description:
           typeof frontmatter.description === 'string' ? frontmatter.description : '',

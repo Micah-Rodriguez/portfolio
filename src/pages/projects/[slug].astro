@@ -68,6 +68,9 @@ const { project, previousProject, nextProject } = Astro.props;
         <div><dt>Disciplines</dt><dd>{project.data.disciplines.join(', ')}</dd></div>
         <div><dt>Year</dt><dd>{project.data.year}</dd></div>
         <div><dt>Company</dt><dd>{project.data.company}</dd></div>
+        {project.data.tools && project.data.tools.length > 0 && (
+          <div><dt>Tools Used</dt><dd>{project.data.tools.join(', ')}</dd></div>
+        )}
       </dl>
     </header>
   </article>
