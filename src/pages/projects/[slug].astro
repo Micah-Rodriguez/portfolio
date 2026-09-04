@@ -27,6 +27,7 @@ interface Props {
 }
 
 const { project, previousProject, nextProject } = Astro.props;
+const DescriptionContent = project.DescriptionContent;
 ---
 
 <BaseLayout
@@ -62,7 +63,13 @@ const { project, previousProject, nextProject } = Astro.props;
     <header class="project-page__header">
       <div>
         <h1>{project.data.title}</h1>
-        {project.data.description && <p class="project-page__description">{project.data.description}</p>}
+        {project.data.description && (
+          project.renderMarkdownDescription ? (
+            <div class="project-page__description"><DescriptionContent /></div>
+          ) : (
+            <p class="project-page__description">{project.data.description}</p>
+          )
+        )}
       </div>
       <dl class="project-page__meta">
         <div><dt>Disciplines</dt><dd>{project.data.disciplines.join(', ')}</dd></div>

@@ -1,4 +1,4 @@
-import type { ImageMetadata } from 'astro';
+import type { ImageMetadata, MarkdownInstance } from 'astro';
 
 export interface ProjectData {
   title: string;
@@ -21,11 +21,11 @@ export interface Project {
   slug: string;
   data: ProjectData;
   images: ProjectImage[];
+  DescriptionContent: MarkdownInstance<Record<string, unknown>>['Content'];
+  renderMarkdownDescription: boolean;
 }
 
-interface ProjectModule {
-  frontmatter: Record<string, unknown>;
-}
+interface ProjectModule extends MarkdownInstance<Record<string, unknown>> {}
 
 const projectFiles = import.meta.glob<ProjectModule>(
   '/src/content/projects/*/project.md',
@@ -41,6 +41,27 @@ function requiredString(value: unknown, field: string, source: string) {
   if (typeof value !== 'string' || value.trim() === '') {
     throw new Error(`${source}: frontmatter field "${field}" must be a non-empty string.`);
   }
+  return value;
+}
+
+function descriptionFieldFromBody(body: string) {
+  const match = body.match(/^description:\s*(.+)$/m);
+  if (!match) return '';
+
+  const value = match[1].trim();
+  if (value.startsWith('"') && value.endsWith('"')) {
+    try {
+      const parsed = JSON.parse(value);
+      return typeof parsed === 'string' ? parsed : '';
+    } catch {
+      return value.slice(1, -1);
+    }
+  }
+
+  if (value.startsWith("'") && value.endsWith("'")) {
+    return value.slice(1, -1);
+  }
+
   return value;
 }
 
@@ -64,6 +85,13 @@ function loadProjects(): Project[] {
     const disciplines = frontmatter.disciplines.map((discipline) =>
       requiredString(discipline, 'disciplines', filePath),
     );
+    const body = module.rawContent().trim();
+    const frontmatterDescription =
+      typeof frontmatter.description === 'string' ? frontmatter.description : '';
+    const bodyDescription = descriptionFieldFromBody(body);
+    const description = frontmatterDescription || bodyDescription || body;
+    const renderMarkdownDescription =
+      frontmatterDescription === '' && bodyDescription === '' && body !== '';
     let tools: string[] | undefined;
     if (frontmatter.tools !== undefined) {
       if (!Array.isArray(frontmatter.tools)) {
@@ -103,11 +131,12 @@ function loadProjects(): Project[] {
         company,
         tools,
         hidden: frontmatter.hidden === true,
-        description:
-          typeof frontmatter.description === 'string' ? frontmatter.description : '',
+        description,
         imageAlts,
       },
       images,
+      DescriptionContent: module.Content,
+      renderMarkdownDescription,
     };
   });
 }
