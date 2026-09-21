@@ -14,8 +14,9 @@ for (const project of projects) {
   disciplineGroups.set(primaryDiscipline, group);
 }
 
-const sortedDisciplineGroups = [...disciplineGroups.entries()].sort(([a], [b]) =>
-  a.localeCompare(b),
+const sortedDisciplineGroups = [...disciplineGroups.entries()].sort(
+  ([disciplineA, projectsA], [disciplineB, projectsB]) =>
+    projectsB.length - projectsA.length || disciplineA.localeCompare(disciplineB),
 );
 ---
 
@@ -93,9 +94,13 @@ const sortedDisciplineGroups = [...disciplineGroups.entries()].sort(([a], [b]) =
         groups.set(groupName, group);
       }
 
-      const groupNames = [...groups.keys()].sort((a, b) =>
-        mode === 'year' ? Number(b) - Number(a) : a.localeCompare(b),
-      );
+      const groupNames = [...groups.keys()].sort((a, b) => {
+        if (mode === 'year') return Number(b) - Number(a);
+
+        const projectCountDifference =
+          (groups.get(b)?.length ?? 0) - (groups.get(a)?.length ?? 0);
+        return projectCountDifference || a.localeCompare(b);
+      });
       const fragment = document.createDocumentFragment();
 
       groupNames.forEach((groupName, groupIndex) => {
